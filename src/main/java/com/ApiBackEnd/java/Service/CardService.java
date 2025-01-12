@@ -1,6 +1,7 @@
 package com.ApiBackEnd.java.Service;
 
 import com.ApiBackEnd.java.Model.CardModel;
+import com.ApiBackEnd.java.Model.UserModel;
 import com.ApiBackEnd.java.Repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,4 +26,15 @@ public class CardService {
     public List<CardModel> getCards() {
         return cardRepository.findAll();
     }
+
+    public CardModel updateCard(CardModel cardModel) {
+        return cardRepository.save(cardModel);
+    }
+
+    public boolean deleteCard(Long id) {
+        CardModel card = cardRepository.findById(id).get();
+        cardRepository.delete(card);
+        return false;
+    }
+
 }

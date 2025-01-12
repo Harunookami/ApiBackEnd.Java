@@ -1,15 +1,24 @@
 package com.ApiBackEnd.java.Model;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 
-@Data
 public class AuthenticationModel {
 
-
-    @Column(unique = true, nullable = false)
+    private String email;
     private String username;
-
-    @Column(nullable = false)
     private String password;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+
 }

@@ -2,31 +2,32 @@ package com.ApiBackEnd.java.Service;
 
 import com.ApiBackEnd.java.Model.UserModel;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
-@AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
     private Long id;
-    private String name;
-    private String username;
     private String email;
     private String password;
-
+    private Collection<? extends GrantedAuthority> authorities;
 
     public static UserDetailsImpl build (UserModel user) {
         return new UserDetailsImpl(user.getId(),
-              user.getName(),
-              user.getUsername,
               user.getEmail(),
-                user.getPassword());
+                user.getPassword(),
+                new ArrayList<>());
     }
 
-    private Collection<? extends GrantedAuthority> authorities;
+    public UserDetailsImpl(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

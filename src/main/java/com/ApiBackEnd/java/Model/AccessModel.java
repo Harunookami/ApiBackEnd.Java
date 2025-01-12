@@ -5,11 +5,14 @@ import lombok.Data;
 import jakarta.validation.constraints.NotNull;
 
 @Data
-@AllArgsConstructor
 public class AccessModel {
 
 
     @NotNull
     private String token;
+
+    public AccessModel(String token) {
+        this.token = token;
+    }
 
 }

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.MalformedInputException;
 import java.security.Key;
 import java.util.Date;
 
@@ -33,6 +32,10 @@ public class JwtUtils {
     public Key getSigninKey (){
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
         return key;
+    }
+
+    public String getUsernameToken(String token) {
+        return Jwts.parser().setSigningKey(getSigninKey()).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
