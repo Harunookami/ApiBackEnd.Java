@@ -2,7 +2,9 @@ package com.ApiBackEnd.java.Controller;
 
 import com.ApiBackEnd.java.Model.AccessModel;
 import com.ApiBackEnd.java.Model.AuthenticationModel;
+import com.ApiBackEnd.java.Model.UserModel;
 import com.ApiBackEnd.java.Service.AuthService;
+import com.ApiBackEnd.java.Service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping ("/login")
     public ResponseEntity <?> login( @Valid  @RequestBody AuthenticationModel userAuth) {
@@ -25,4 +29,10 @@ public class AuthController {
             return ResponseEntity.status(401).body(new AccessModel("Access Denied"));
         }
     }
+
+    @PostMapping("/newUser")
+    public void newUser( @RequestBody UserModel newUser) {
+        userService.newUser(newUser);
+    }
+
 }

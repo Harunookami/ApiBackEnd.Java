@@ -22,6 +22,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public void newUser(UserModel user) {
+        UserModel userModel = new UserModel(user);
+        userModel.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(userModel);
+    }
+
     public List<UserModel> listAllUsers() {
         return userRepository.findAll();
     }
