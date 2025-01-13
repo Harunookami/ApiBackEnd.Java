@@ -3,6 +3,7 @@ package com.ApiBackEnd.java.Controller;
 import com.ApiBackEnd.java.Model.AccessModel;
 import com.ApiBackEnd.java.Model.AuthenticationModel;
 import com.ApiBackEnd.java.Service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping ("/login")
-    public ResponseEntity <?> login(@RequestBody AuthenticationModel userAuth) {
+    public ResponseEntity <?> login( @Valid  @RequestBody AuthenticationModel userAuth) {
         AccessModel accessModel = authService.login(userAuth);
         if (accessModel != null) {
             return ResponseEntity.ok(accessModel);

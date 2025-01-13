@@ -1,4 +1,6 @@
 package com.ApiBackEnd.java.DTO;
 
-public record CardRecord(String cardNumber, String expiryDate, String cvv, String holderName ) {
+import java.time.LocalDate;
+
+public record CardRecord(String cardNumber, LocalDate expiryDate, String cvv, String holderName ) {
 }

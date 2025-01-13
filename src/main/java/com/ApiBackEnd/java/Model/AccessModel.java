@@ -1,6 +1,5 @@
 package com.ApiBackEnd.java.Model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import jakarta.validation.constraints.NotNull;
 
@@ -8,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public class AccessModel {
 
 
-    @NotNull
+    @NotNull (message = "Token cannot be null")
     private String token;
 
     public AccessModel(String token) {

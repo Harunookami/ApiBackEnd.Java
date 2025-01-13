@@ -4,6 +4,8 @@ import com.ApiBackEnd.java.Service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,9 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+
+
     @Value("${project.jwtSecret}")
     private String jwtSecret;
 
@@ -22,7 +27,8 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateTokenFromUserDetailsImpl(UserDetailsImpl userDetail) {
-        return Jwts.builder().setSubject(userDetail.getUsername())
+        return Jwts.builder()
+                .setSubject(userDetail.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
                 .signWith(getSigninKey(), SignatureAlgorithm.HS512)
@@ -30,28 +36,35 @@ public class JwtUtils {
     }
 
     public Key getSigninKey (){
-        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
-        return key;
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
     public String getUsernameToken(String token) {
-        return Jwts.parser().setSigningKey(getSigninKey()).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser()
+                .setSigningKey(getSigninKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
 
         try {
-            Jwts.parser().setSigningKey(getSigninKey()).build().parseClaimsJws(authToken);
+            Jwts.parser()
+                    .setSigningKey(getSigninKey())
+                    .build()
+                    .parseClaimsJws(authToken);
 
         return true;
 
         } catch (MalformedJwtException e) {
-            System.out.println("Invalid Token" + e.getMessage());
+            logger.error("Invalid Token" + e.getMessage());
 
         } catch (ExpiredJwtException e) {
-            System.out.println("Expired Token" + e.getMessage());
+            logger.error("Expired Token" + e.getMessage());
         } catch (UnsupportedJwtException e){
-            System.out.println("Unsupported Token" + e.getMessage());
+            logger.error("Unsupported Token" + e.getMessage());
         }
 
         return false;

@@ -2,16 +2,16 @@ package com.ApiBackEnd.java.Security.jwt;
 
 import com.ApiBackEnd.java.Service.AuthService;
 import com.ApiBackEnd.java.Service.UserDetailServiceImpl;
-import com.ApiBackEnd.java.Service.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -21,6 +21,8 @@ import java.io.IOException;
 
 @Component
 public class AuthFilterToken extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthFilterToken.class);
 
     @Autowired
     private JwtUtils jwtUtil;
@@ -39,7 +41,7 @@ public class AuthFilterToken extends OncePerRequestFilter {
 
                 String username = jwtUtil.getUsernameToken(jwt);
 
-                UserDetails userDetails = userDetailService.loadUserByUsername(jwt);
+                UserDetails userDetails = userDetailService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -48,12 +50,11 @@ public class AuthFilterToken extends OncePerRequestFilter {
 
 
         } catch (Exception e) {
-            System.out.println("Error authenticating token: " + e.getMessage());
+           logger.error("Error authenticating token: " + e.getMessage());
+
         } finally {
-
+            filterChain.doFilter(request, response);
         }
-
-        filterChain.doFilter(request, response);
 
     }
 

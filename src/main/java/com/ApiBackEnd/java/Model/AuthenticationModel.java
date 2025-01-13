@@ -1,16 +1,14 @@
 package com.ApiBackEnd.java.Model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 public class AuthenticationModel {
 
-    private String email;
+    @NotNull
     private String username;
+    @NotNull
     private String password;
-
-    public String getEmail() {
-        return email;
-    }
 
     public String getUsername() {
         return username;

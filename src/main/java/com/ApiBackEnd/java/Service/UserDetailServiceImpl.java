@@ -3,12 +3,14 @@ package com.ApiBackEnd.java.Service;
 import com.ApiBackEnd.java.Model.UserModel;
 import com.ApiBackEnd.java.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Component
@@ -20,8 +22,13 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserModel user = userRepository.findByLogin(email).get();
-        return UserDetailsImpl.build(user);
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        UserModel user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + login));
+
+        List<String> roles = new ArrayList<>();
+        roles.add("ROLE_USER");
+
+        return UserDetailsImpl.build(user, roles);
     }
 }

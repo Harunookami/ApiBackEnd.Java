@@ -3,6 +3,7 @@ package com.ApiBackEnd.java.Controller;
 import com.ApiBackEnd.java.Model.TransactionModel;
 import com.ApiBackEnd.java.Service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,11 +16,12 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @PostMapping
-    public TransactionModel addTransaction(@RequestBody  TransactionModel transaction) {
-        return transactionService.addTransaction(transaction);
+    public ResponseEntity <TransactionModel> addTransaction(@RequestBody  TransactionModel transaction) {
+        TransactionModel createdTransaction = transactionService.addTransaction(transaction);
+        return ResponseEntity.status(201).body(createdTransaction);
     }
 
-    @GetMapping("/transactions")
+    @GetMapping()
     public List<TransactionModel> getTransactions() {
         return transactionService.getTransactions();
     }

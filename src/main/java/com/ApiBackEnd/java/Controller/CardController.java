@@ -16,22 +16,30 @@ public class CardController {
     private CardService cardService;
 
     @PostMapping
-    public CardModel addCard(@RequestBody CardModel card) {
-        return cardService.addCard(card);
+    public ResponseEntity<CardModel> addCard(@RequestBody CardModel card) {
+        CardModel savedCard = cardService.addCard(card);
+        return ResponseEntity.status(201).body(savedCard);
     }
 
-    @GetMapping("/cards")
+    @GetMapping()
     public List<CardModel> getCards() {
         return cardService.getCards();
     }
 
     @PutMapping("/{id}")
-    public CardModel updateCard(@PathVariable Long id, @RequestBody CardModel card) {
-        return cardService.updateCard(card);
+    public ResponseEntity <CardModel> updateCard(@PathVariable Long id, @RequestBody CardModel card) {
+        CardModel updateCard = cardService.updateCard(id, card);
+
+        if (updateCard != null) {
+            return ResponseEntity.ok(updateCard);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCard(@PathVariable("id") Long id) {
+    public ResponseEntity<Object> deleteCard(@PathVariable Long id) {
         boolean deleted = cardService.deleteCard(id);
 
         if (deleted) {

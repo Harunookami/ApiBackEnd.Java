@@ -16,18 +16,25 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public UserModel addUser(@RequestBody UserModel user) {
-        return userService.addUser(user);
+    public ResponseEntity<UserModel> addUser(@RequestBody UserModel user) {
+        UserModel createdUser = userService.addUser(user);
+        return ResponseEntity.status(201).body(createdUser);
     }
 
     @GetMapping
-    public List<UserModel> getAllUsers() {
-        return userService.listAllUsers();
+    public ResponseEntity <List<UserModel>> getAllUsers() {
+        List<UserModel> users = userService.listAllUsers();
+        return ResponseEntity.ok().body(users);
     }
 
-    @PutMapping()
-    public UserService updateUser ( @RequestBody UserModel userModel) {
-        return userService;
+    @PutMapping("/{id}")
+    public ResponseEntity <UserModel> updateUser (@PathVariable Long id, @RequestBody UserModel userModel) {
+        UserModel updatedUser = userService.updateUser(id, userModel);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
