@@ -23,9 +23,8 @@ public class UserService {
     }
 
     public void newUser(UserModel user) {
-        UserModel userModel = new UserModel(user);
-        userModel.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(userModel);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     public List<UserModel> listAllUsers() {
@@ -41,4 +40,5 @@ public class UserService {
         userRepository.delete(user);
         return false;
     }
+
 }
