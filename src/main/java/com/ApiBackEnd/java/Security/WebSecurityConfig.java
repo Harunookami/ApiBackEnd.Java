@@ -47,12 +47,16 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/users/**").permitAll()
-                        .requestMatchers("/users/register").permitAll()
+                        .requestMatchers("/auth/login/**").permitAll()
+                        .requestMatchers("/users/register/**").permitAll()
+                        .requestMatchers("/users").hasRole("USER")
+                       .requestMatchers("/cards/**").hasRole("USER")
+                        .requestMatchers("/transaction/**").hasRole("USER")
                         . anyRequest().authenticated());
 
         http.addFilterBefore(authFilterToken(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 }

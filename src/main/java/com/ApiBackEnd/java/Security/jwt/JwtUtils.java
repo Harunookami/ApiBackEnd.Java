@@ -1,5 +1,6 @@
 package com.ApiBackEnd.java.Security.jwt;
 
+import com.ApiBackEnd.java.Model.LoginRequest;
 import com.ApiBackEnd.java.Service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 
@@ -26,9 +26,9 @@ public class JwtUtils {
     @Value("${project.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateTokenFromUserDetailsImpl(UserDetailsImpl userDetail) {
+    public String generateTokenFromUserDetailsImpl(LoginRequest userDetail) {
         return Jwts.builder()
-                .setSubject(userDetail.getUsername())
+                .setSubject(userDetail.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
                 .signWith(getSigninKey(), SignatureAlgorithm.HS512)
@@ -40,12 +40,17 @@ public class JwtUtils {
     }
 
     public String getUsernameToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSigninKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(getSigninKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (JwtException e) {
+            logger.error("Error extracting username from token: {}", e.getMessage());
+            return null;
+        }
     }
 
     public boolean validateJwtToken(String authToken) {

@@ -22,9 +22,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        UserModel user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + login));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserModel user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
         List<String> roles = new ArrayList<>();
         roles.add("ROLE_USER");

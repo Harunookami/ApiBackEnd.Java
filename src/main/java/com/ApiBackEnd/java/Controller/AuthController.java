@@ -2,7 +2,6 @@ package com.ApiBackEnd.java.Controller;
 
 import com.ApiBackEnd.java.Model.AccessModel;
 import com.ApiBackEnd.java.Model.AuthenticationModel;
-import com.ApiBackEnd.java.Model.UserModel;
 import com.ApiBackEnd.java.Service.AuthService;
 import com.ApiBackEnd.java.Service.UserService;
 import jakarta.validation.Valid;
@@ -21,8 +20,8 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping ("/login")
-    public ResponseEntity <?> login( @Valid  @RequestBody AuthenticationModel userAuth) {
-        AccessModel accessModel = authService.login(userAuth);
+    public ResponseEntity <AccessModel> login( @Valid  @RequestBody AuthenticationModel userAuth) {
+        AccessModel accessModel = authService.login(userAuth).getBody();
         if (accessModel != null) {
             return ResponseEntity.ok(accessModel);
         } else {
@@ -30,9 +29,5 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/newUser")
-    public void newUser( @RequestBody UserModel newUser) {
-        userService.newUser(newUser);
-    }
 
 }

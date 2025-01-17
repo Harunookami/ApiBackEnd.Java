@@ -2,7 +2,10 @@ package com.ApiBackEnd.java.Controller;
 
 import com.ApiBackEnd.java.Model.CardModel;
 import com.ApiBackEnd.java.Service.CardService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,19 +18,23 @@ public class CardController {
     @Autowired
     private CardService cardService;
 
-    @PostMapping
-    public ResponseEntity<CardModel> addCard(@RequestBody CardModel card) {
+    @Autowired
+    private ValidationAutoConfiguration validationAutoConfiguration;
+
+    @PostMapping("/register")
+    public ResponseEntity<CardModel> addCard( @RequestBody CardModel card) {
         CardModel savedCard = cardService.addCard(card);
-        return ResponseEntity.status(201).body(savedCard);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCard);
     }
 
     @GetMapping()
-    public List<CardModel> getCards() {
-        return cardService.getCards();
+    public ResponseEntity<List<CardModel>> getCards() {
+        List<CardModel>      cards = cardService.getCards();
+        return ResponseEntity.ok(cards);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity <CardModel> updateCard(@PathVariable Long id, @RequestBody CardModel card) {
+    public ResponseEntity <CardModel> updateCard(@PathVariable Long id, @Valid @RequestBody CardModel card) {
         CardModel updateCard = cardService.updateCard(id, card);
 
         if (updateCard != null) {

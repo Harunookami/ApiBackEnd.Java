@@ -1,7 +1,11 @@
 package com.ApiBackEnd.java.Controller;
 
+import com.ApiBackEnd.java.Model.LoginRequest;
 import com.ApiBackEnd.java.Model.UserModel;
+import com.ApiBackEnd.java.Security.jwt.JwtUtils;
+import com.ApiBackEnd.java.Service.UserDetailsImpl;
 import com.ApiBackEnd.java.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +18,28 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @PostMapping("/register")
-    public ResponseEntity<UserModel> addUser(@RequestBody UserModel user) {
+    public ResponseEntity<UserModel> addUser(@Valid @RequestBody UserModel user) {
         UserModel createdUser = userService.addUser(user);
         return ResponseEntity.status(201).body(createdUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> userLogin (@RequestBody LoginRequest loginRequest ){
+    UserDetailsImpl userDetails = userService.authenticate(loginRequest);
+
+    if (userDetails != null) {
+
+        String token = jwtUtils.generateTokenFromUserDetailsImpl(loginRequest);
+        return ResponseEntity.ok(token);
+
+    } else {
+        return ResponseEntity.status(401).body("Invalid Credentials.");
+    }
+
     }
 
     @GetMapping

@@ -1,6 +1,7 @@
 package com.ApiBackEnd.java.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,8 @@ public class CardModel {
     private UserModel user;
 
 
-    @Column (length = 16, unique = true, nullable = false)
+    @Column ( unique = true, nullable = false)
+    @Size(min = 16, max = 16, message = "Card number must be 16 digits")
     private String cardNumber;
 
 
@@ -37,7 +39,8 @@ public class CardModel {
     private LocalDate expiryDate;
 
 
-    @Column (length = 3, nullable = false)
+    @Column (unique = true, nullable = false)
+    @Size (min = 3, max = 3)
     private String cvv;
 
 
